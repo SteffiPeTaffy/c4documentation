@@ -1,16 +1,15 @@
 package elements
 
-import (
-	"fmt"
-)
+import "fmt"
 
-type Relation struct {
-	From       NamedElement
-	To         AliasElement
+type C4Relation struct {
+	C4Printable
+	From       C4NodeElement
+	To         C4NodeElement
 	Label      string
 	Technology string
 }
 
-func (r *Relation) ToPlantUMLString() string {
+func (r *C4Relation) ToC4PlantUMLString() string {
 	return fmt.Sprintf("Rel(%v, '%v', '%s', '%s')\n", r.From.Alias(), r.To.Alias(), r.Label, r.Technology)
 }

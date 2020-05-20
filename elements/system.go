@@ -5,22 +5,35 @@ import (
 )
 
 type System struct {
-	NamedElement
-	Description string
-	External    bool
+	C4NodeElement
+	description string
+	external    bool
 }
 
-func NewSystem(name string, description string, external bool) *System {
-	return &System{
-		NamedElement: NamedElement{Name: name},
-		Description:  description,
-		External:     external,
+func NewSystem(name string) *System {
+	system := System{
+		C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
 	}
+	system.C4Writer = func() string {
+		return system.toC4PlantUMLString()
+	}
+	return &system
 }
 
-func (s *System) ToPlantUMLString() string {
-	if s.External {
-		return fmt.Sprintf("System_Ext(%v, '%s', '%s')\n", s.Alias(), s.Name, s.Description)
+func (s *System) Description(description string) *System {
+	s.description = description
+	return s
+}
+
+func (s *System) External(external bool) *System {
+	s.external = external
+	return s
+}
+
+
+func (s *System) toC4PlantUMLString() string {
+	if s.external {
+		return fmt.Sprintf("System_Ext(%v, '%s', '%s')\n", s.Alias(), s.Name, s.description)
 	}
-	return fmt.Sprintf("System(%v, '%s', '%s')\n", s.Alias(), s.Name, s.Description)
+	return fmt.Sprintf("System(%v, '%s', '%s')\n", s.Alias(), s.Name, s.description)
 }

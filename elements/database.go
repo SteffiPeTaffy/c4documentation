@@ -5,23 +5,31 @@ import (
 )
 
 type Database struct {
-	NamedElement
-	Description string
-	Technology  string
+	C4NodeElement
+	description       string
+	technology        string
 }
 
-func NewDatabase(name string, description string, technology string) *Database {
+func NewDatabase(name string) *Database {
 	database := Database{
-		NamedElement: NamedElement{Name: name},
-		Description:  description,
-		Technology:   technology,
+		C4NodeElement:     C4NodeElement{Name: name},
 	}
-	database.C4Writer = DatabaseWriter(database)
+	database.C4Writer = func() string {
+		return database.toC4PlantUMLString()
+	}
 	return &database
 }
 
-func DatabaseWriter(d Database) func(element *NamedElement) string {
-	return func(element *NamedElement) string {
-		return fmt.Sprintf("ContainerDb(%s, %s, %s, %s)\n", d.Alias(), d.Name, d.Technology, d.Description)
-	}
+func (d *Database) Description(description string) *Database {
+	d.description = description
+	return d
+}
+
+func (d *Database) Technology(technology string) *Database {
+	d.technology = technology
+	return d
+}
+
+func (d *Database) toC4PlantUMLString() string {
+	return fmt.Sprintf("ContainerDb(%v, '%s', '%s', '%s')\n", d.Alias(), d.Name, d.technology, d.description)
 }

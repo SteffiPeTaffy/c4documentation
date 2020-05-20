@@ -5,22 +5,34 @@ import (
 )
 
 type Person struct {
-	NamedElement
-	Description string
-	External    bool
+	C4NodeElement
+	description string
+	external    bool
 }
 
-func NewPerson(name string, description string, external bool) *Person {
-	return &Person{
-		NamedElement: NamedElement{Name: name},
-		Description:  description,
-		External:     external,
+func NewPerson(name string) *Person {
+	person := Person{
+		C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
 	}
+	person.C4Writer = func() string {
+		return person.toC4PlantUMLString()
+	}
+	return &person
 }
 
-func (p *Person) ToPlantUMLString() string {
-	if p.External {
-		return fmt.Sprintf("Person_Ext(%v, '%s', '%s')", p.Alias(), p.Name, p.Description)
+func (p *Person) Description(description string) *Person {
+	p.description = description
+	return p
+}
+
+func (p *Person) External(external bool) *Person {
+	p.external = external
+	return p
+}
+
+func (p *Person) toC4PlantUMLString() string {
+	if p.external {
+		return fmt.Sprintf("Person_Ext(%v, '%s', '%s')", p.Alias(), p.Name, p.description)
 	}
-	return fmt.Sprintf("Person(%v, '%s', '%s')\n", p.Alias(), p.Name, p.Description)
+	return fmt.Sprintf("Person(%v, '%s', '%s')\n", p.Alias(), p.Name, p.description)
 }

@@ -7,26 +7,36 @@ import (
 )
 
 func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
-	someContainer := elements.NewContainer("my first container", "does things", "Go").Build()
-	someContainerDatabase := elements.NewDatabase("my database", "stores stuff", "Postgres").Build()
-	someOtherContainer := elements.NewContainer(
-			"my other service",
-			"does also stuff",
-			"Go").
-		RelatesTo(&someContainer, "requests stuff", "REST/https").
-		RelatesTo(&someContainerDatabase, "persists stuff", "REST/https").
+	someContainerDatabase := elements.
+		NewDatabase("my database").
+		Description("stores stuff").
+		Technology("Postgres").
+		Build()
+	someContainer := elements.
+		NewContainer("my first container").
+		RelatesTo(*someContainerDatabase, "persists stuff", "REST/https")
+
+	someSystemBoundary := elements.
+		NewSystemBoundary("boundary one").
+		Add(*someContainer).
+		Add(*someContainerDatabase).
 		Build()
 
-	someSystemBoundary := elements.NewSystemBoundary("boundary one", someContainer).Build()
-	someOtherSystemBoundary := elements.NewSystemBoundary("boundary two", someOtherContainer, someContainerDatabase).Build()
+	someOtherContainer := elements.
+		NewContainer("my other service").
+		Description("does also stuff").
+		Technology("Go").
+		RelatesTo(*someContainer, "requests stuff", "REST/https")
 
-	containerDiagram := ContainerDiagram{
-		Name: "SWF Container Diagram",
-		Elements: []elements.NamedElement{
-			someSystemBoundary,
-			someOtherSystemBoundary,
-		},
-	}
+	someOtherSystemBoundary := elements.
+		NewSystemBoundary("boundary two").
+		Add(*someOtherContainer).
+		Build()
 
-	fmt.Println(containerDiagram.ToPlantUMLString())
+	containerDiagram := NewContainerDiagram("SWF Container Diagram").
+		AddSystemBoundary(*someSystemBoundary).
+		AddSystemBoundary(*someOtherSystemBoundary)
+
+
+	fmt.Println(containerDiagram.ToC4PlantUMLString())
 }

@@ -6,39 +6,42 @@ import (
 )
 
 type SystemBoundary struct {
-	NamedElement
-	Elements []NamedElement
+	C4ContainerElement
 }
 
-func NewSystemBoundary(name string, elements ...NamedElement) *SystemBoundary {
+func NewSystemBoundary(name string) *SystemBoundary {
 	systemBoundary := SystemBoundary{
-		NamedElement: NamedElement{
-			Name: name,
+		C4ContainerElement: C4ContainerElement{
+			C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
+			elements:      []C4NodeElement{},
+			containers:    []C4ContainerElement{},
 		},
-		Elements: elements,
 	}
-	systemBoundary.C4Writer = systemBoundaryWriter(systemBoundary)
+	systemBoundary.C4Writer = func() string {
+		return systemBoundary.toC4PlantUMLString()
+	}
 	return &systemBoundary
 }
 
-func systemBoundaryWriter(sb SystemBoundary) func(element *NamedElement) string {
-	return func(element *NamedElement) string {
-		var b bytes.Buffer
-		b.WriteString(fmt.Sprintf("System_Boundary(%s, %s) {\n", sb.Alias(), sb.Name))
-
-		for _, element := range sb.Elements {
-			b.WriteString(element.C4Writer(&element))
-		}
-
-		b.WriteString("}\n")
-
-		return b.String()
-	}
+func (sb *SystemBoundary) AddSystemBoundary(systemBoundary C4ContainerElement) *SystemBoundary {
+	sb.containers = append(sb.containers, systemBoundary)
+	return sb
 }
 
-
-
-func (sb *SystemBoundary) Add(element NamedElement) *SystemBoundary {
-	sb.Elements = append(sb.Elements, element)
+func (sb *SystemBoundary) Add(element C4NodeElement) *SystemBoundary {
+	sb.elements = append(sb.elements, element)
 	return sb
+}
+
+func (sb *SystemBoundary) toC4PlantUMLString() string {
+	var b bytes.Buffer
+	b.WriteString(fmt.Sprintf("System_Boundary(%s, %s) {\n", sb.Alias(), sb.Name))
+
+	for _, element := range sb.elements {
+		b.WriteString(element.C4Writer())
+	}
+
+	b.WriteString("}\n")
+
+	return b.String()
 }
