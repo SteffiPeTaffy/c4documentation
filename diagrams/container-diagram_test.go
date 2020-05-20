@@ -1,12 +1,12 @@
-package main
+package diagrams
 
 import (
-	"c4documentation/diagrams"
 	"c4documentation/elements"
 	"fmt"
+	"testing"
 )
 
-func main() {
+func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 	someContainer := elements.NewContainer("my first container", "does things", "Go").Build()
 	someContainerDatabase := elements.NewDatabase("my database", "stores stuff", "Postgres").Build()
 	someOtherContainer := elements.NewContainer(
@@ -20,8 +20,7 @@ func main() {
 	someSystemBoundary := elements.NewSystemBoundary("boundary one", someContainer).Build()
 	someOtherSystemBoundary := elements.NewSystemBoundary("boundary two", someOtherContainer, someContainerDatabase).Build()
 
-
-	containerDiagram := diagrams.ContainerDiagram{
+	containerDiagram := ContainerDiagram{
 		Name: "SWF Container Diagram",
 		Elements: []elements.NamedElement{
 			someSystemBoundary,

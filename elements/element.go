@@ -17,13 +17,17 @@ type PlantUMLElement interface {
 type NamedElement struct {
 	Name              string
 	OutgoingRelations []Relation
-	PlantUMLElement
+	C4Writer          func(element *NamedElement) string
 	AliasElement
 }
 
 func (n *NamedElement) Alias() Alias {
 	reg, _ := regexp.Compile("[^a-zA-Z0-9]+")
 	return Alias(reg.ReplaceAllString(n.Name, ""))
+}
+
+func (n *NamedElement) Build() NamedElement {
+	return *n
 }
 
 func (n *NamedElement) RelatesTo(element AliasElement, label string, technology string) *NamedElement {

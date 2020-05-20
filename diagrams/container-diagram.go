@@ -8,10 +8,10 @@ import (
 
 type ContainerDiagram struct {
 	Name string
-	Elements []elements.PlantUMLElement
+	Elements []elements.NamedElement
 }
 
-func (c *ContainerDiagram) Add(element elements.PlantUMLElement) *ContainerDiagram {
+func (c *ContainerDiagram) Add(element elements.NamedElement) *ContainerDiagram {
 	c.Elements = append(c.Elements, element)
 	return c
 }
@@ -25,7 +25,7 @@ func (c *ContainerDiagram) ToPlantUMLString() string {
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
 	for _, element := range c.Elements {
-		b.WriteString(element.ToPlantUMLString())
+		b.WriteString(element.C4Writer(&element))
 	}
 
 	b.WriteString("@enduml")
