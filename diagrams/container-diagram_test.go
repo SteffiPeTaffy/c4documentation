@@ -1,8 +1,8 @@
 package diagrams
 
 import (
-	"c4documentation/elements"
 	"fmt"
+	"github.com/SteffiPeTaffy/c4documentation/elements"
 	"testing"
 )
 
@@ -14,7 +14,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		Build()
 	someContainer := elements.
 		NewContainer("my first container").
-		RelatesTo(*someContainerDatabase, "persists stuff", "REST/https")
+		RelatesTo(someContainerDatabase, "persists stuff", "REST/https")
 
 	someSystemBoundary := elements.
 		NewSystemBoundary("boundary one").
@@ -26,7 +26,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		NewContainer("my other service").
 		Description("does also stuff").
 		Technology("Go").
-		RelatesTo(*someContainer, "requests stuff", "REST/https")
+		RelatesTo(someContainer, "requests stuff", "REST/https")
 
 	someOtherSystemBoundary := elements.
 		NewSystemBoundary("boundary two").

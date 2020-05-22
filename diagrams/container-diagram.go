@@ -2,8 +2,8 @@ package diagrams
 
 import (
 	"bytes"
-	"c4documentation/elements"
 	"fmt"
+	"github.com/SteffiPeTaffy/c4documentation/elements"
 )
 
 type C4ContainerDiagram struct {

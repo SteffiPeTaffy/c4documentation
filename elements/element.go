@@ -8,6 +8,10 @@ type C4Printable interface {
 	ToC4PlantUMLString() string
 }
 
+type C4PlantUMLAlias interface {
+	Alias() C4Alias
+}
+
 type C4Node interface {
 	RelatesTo(to C4NodeElement, label string, technology string) *C4NodeElement
 }
@@ -20,6 +24,7 @@ type C4Container interface {
 type C4Alias string
 
 type C4NodeElement struct {
+	C4PlantUMLAlias
 	C4Node
 	Name              string
 	OutgoingRelations []C4Relation
@@ -42,7 +47,7 @@ func (n *C4NodeElement) Alias() C4Alias {
 	return C4Alias(reg.ReplaceAllString(n.Name, ""))
 }
 
-func (n *C4NodeElement) RelatesTo(to C4NodeElement, label string, technology string) *C4NodeElement {
+func (n *C4NodeElement) RelatesTo(to C4PlantUMLAlias, label string, technology string) *C4NodeElement {
 	n.OutgoingRelations = append(n.OutgoingRelations, C4Relation{
 		From:       *n,
 		To:         to,
