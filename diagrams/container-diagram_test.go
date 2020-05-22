@@ -38,7 +38,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		AddSystemBoundary(*someOtherSystemBoundary).
 		Build()
 
-	containerDiagram := NewContainerDiagram("SWF Container Diagram").
+	containerDiagram := NewContainerDiagram("My Container Diagram").
 		AddSystemBoundary(*someSystemBoundary).
 		AddSystemBoundary(*boundaryWrappingSomeOtherBonudary)
 

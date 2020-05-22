@@ -1,6 +1,7 @@
 package elements
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -31,13 +32,6 @@ type C4NodeElement struct {
 	C4Writer          func() string
 }
 
-type C4ContainerElement struct {
-	C4Container
-	C4NodeElement
-	elements   []C4NodeElement
-	containers []C4ContainerElement
-}
-
 func (n *C4NodeElement) Build() *C4NodeElement {
 	return n
 }
@@ -57,6 +51,13 @@ func (n *C4NodeElement) RelatesTo(to C4PlantUMLAlias, label string, technology s
 	return n
 }
 
+type C4ContainerElement struct {
+	C4Container
+	C4NodeElement
+	elements   []C4NodeElement
+	containers []C4ContainerElement
+}
+
 func (c *C4ContainerElement) VisitElements(callback func(element C4NodeElement) (done bool)) {
 	for _, elem := range c.elements {
 		done := callback(elem)
@@ -73,3 +74,16 @@ func (c *C4ContainerElement) VisitElements(callback func(element C4NodeElement) 
 func (n *C4ContainerElement) Build() *C4ContainerElement {
 	return n
 }
+
+type Step struct {
+	C4Printable
+	From       C4NodeElement
+	To         C4NodeElement
+	Label      string
+	Technology string
+}
+
+func (s *Step) ToC4PlantUMLString() string {
+	return fmt.Sprintf("Rel(%v, '%v', '%s', '%s')\n", s.From.Alias(), s.To.Alias(), s.Label, s.Technology)
+}
+
