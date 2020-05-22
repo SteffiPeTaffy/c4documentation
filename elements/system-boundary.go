@@ -41,6 +41,10 @@ func (sb *SystemBoundary) toC4PlantUMLString() string {
 		b.WriteString(element.C4Writer())
 	}
 
+	for _, container := range sb.containers {
+		b.WriteString(container.C4Writer())
+	}
+
 	b.WriteString("}\n")
 
 	return b.String()

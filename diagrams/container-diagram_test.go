@@ -33,9 +33,14 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		Add(*someOtherContainer).
 		Build()
 
+	boundaryWrappingSomeOtherBonudary :=  elements.
+		NewSystemBoundary("wrapping another boundary").
+		AddSystemBoundary(*someOtherSystemBoundary).
+		Build()
+
 	containerDiagram := NewContainerDiagram("SWF Container Diagram").
 		AddSystemBoundary(*someSystemBoundary).
-		AddSystemBoundary(*someOtherSystemBoundary)
+		AddSystemBoundary(*boundaryWrappingSomeOtherBonudary)
 
 
 	fmt.Println(containerDiagram.ToC4PlantUMLString())
