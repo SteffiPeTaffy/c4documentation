@@ -10,7 +10,7 @@ type C4ContainerDiagram struct {
 	elements.C4Printable
 	name       string
 	elements   []elements.C4NodeElement
-	containers []elements.C4ContainerElement
+	containers []elements.C4BoundaryElement
 }
 
 func NewContainerDiagram (name string) *C4ContainerDiagram {
@@ -24,7 +24,7 @@ func (c *C4ContainerDiagram) Add(element elements.C4NodeElement) *C4ContainerDia
 	return c
 }
 
-func (c *C4ContainerDiagram) AddSystemBoundary(container elements.C4ContainerElement) *C4ContainerDiagram {
+func (c *C4ContainerDiagram) AddSystemBoundary(container elements.C4BoundaryElement) *C4ContainerDiagram {
 	c.containers = append(c.containers, container)
 	return c
 }

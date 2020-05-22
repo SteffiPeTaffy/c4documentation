@@ -17,8 +17,8 @@ type C4Node interface {
 	RelatesTo(to C4NodeElement, label string, technology string) *C4NodeElement
 }
 
-type C4Container interface {
-	Add(element C4NodeElement) *C4Container
+type C4Boundary interface {
+	Add(element C4NodeElement) *C4Boundary
 	VisitElements(callback func(element C4NodeElement) (done bool))
 }
 
@@ -51,14 +51,14 @@ func (n *C4NodeElement) RelatesTo(to C4PlantUMLAlias, label string, technology s
 	return n
 }
 
-type C4ContainerElement struct {
-	C4Container
+type C4BoundaryElement struct {
+	C4Boundary
 	C4NodeElement
 	elements   []C4NodeElement
-	containers []C4ContainerElement
+	containers []C4BoundaryElement
 }
 
-func (c *C4ContainerElement) VisitElements(callback func(element C4NodeElement) (done bool)) {
+func (c *C4BoundaryElement) VisitElements(callback func(element C4NodeElement) (done bool)) {
 	for _, elem := range c.elements {
 		done := callback(elem)
 		if done {
@@ -71,7 +71,7 @@ func (c *C4ContainerElement) VisitElements(callback func(element C4NodeElement) 
 	}
 }
 
-func (n *C4ContainerElement) Build() *C4ContainerElement {
+func (n *C4BoundaryElement) Build() *C4BoundaryElement {
 	return n
 }
 

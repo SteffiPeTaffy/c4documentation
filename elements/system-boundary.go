@@ -6,15 +6,15 @@ import (
 )
 
 type SystemBoundary struct {
-	C4ContainerElement
+	C4BoundaryElement
 }
 
 func NewSystemBoundary(name string) *SystemBoundary {
 	systemBoundary := SystemBoundary{
-		C4ContainerElement: C4ContainerElement{
+		C4BoundaryElement: C4BoundaryElement{
 			C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
 			elements:      []C4NodeElement{},
-			containers:    []C4ContainerElement{},
+			containers:    []C4BoundaryElement{},
 		},
 	}
 	systemBoundary.C4Writer = func() string {
@@ -23,7 +23,7 @@ func NewSystemBoundary(name string) *SystemBoundary {
 	return &systemBoundary
 }
 
-func (sb *SystemBoundary) AddSystemBoundary(systemBoundary C4ContainerElement) *SystemBoundary {
+func (sb *SystemBoundary) AddSystemBoundary(systemBoundary C4BoundaryElement) *SystemBoundary {
 	sb.containers = append(sb.containers, systemBoundary)
 	return sb
 }
