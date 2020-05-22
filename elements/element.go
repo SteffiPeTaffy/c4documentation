@@ -55,24 +55,24 @@ type C4BoundaryElement struct {
 	C4Boundary
 	C4NodeElement
 	elements   []C4NodeElement
-	containers []C4BoundaryElement
+	boundaries []C4BoundaryElement
 }
 
-func (c *C4BoundaryElement) VisitElements(callback func(element C4NodeElement) (done bool)) {
-	for _, elem := range c.elements {
+func (b *C4BoundaryElement) VisitElements(callback func(element C4NodeElement) (done bool)) {
+	for _, elem := range b.elements {
 		done := callback(elem)
 		if done {
 			return
 		}
 	}
 
-	for _, container := range c.containers {
+	for _, container := range b.boundaries {
 		container.VisitElements(callback)
 	}
 }
 
-func (n *C4BoundaryElement) Build() *C4BoundaryElement {
-	return n
+func (b *C4BoundaryElement) Build() *C4BoundaryElement {
+	return b
 }
 
 type Step struct {

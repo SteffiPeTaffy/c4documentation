@@ -11,6 +11,7 @@ type C4SequenceDiagram struct {
 	name     string
 	elements map[elements.C4Alias]elements.C4NodeElement
 	sequence []elements.Step
+	model elements.C4Model
 }
 
 func NewSequenceDiagram(name string, model elements.C4Model) *C4SequenceDiagram {
@@ -18,6 +19,7 @@ func NewSequenceDiagram(name string, model elements.C4Model) *C4SequenceDiagram 
 		name: name,
 		elements: map[elements.C4Alias]elements.C4NodeElement{},
 		sequence: []elements.Step{},
+		model: model,
 	}
 }
 func (c *C4SequenceDiagram) Next(from elements.C4NodeElement, to elements.C4NodeElement, label string, technology string) *C4SequenceDiagram {
@@ -40,12 +42,14 @@ func (c *C4SequenceDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	for _, element := range c.elements {
-		b.WriteString(element.C4Writer())
+	for _, boundary := range c.model.Boundaries {
+		b.WriteString(boundary.C4Writer())
 	}
 
 	for _, step := range c.sequence {
-		b.WriteString(step.ToC4PlantUMLString())
+		if c.model.Contains(step.From) || c.model.Contains(step.To) {
+			b.WriteString(step.ToC4PlantUMLString())
+		}
 	}
 
 	b.WriteString("@enduml")

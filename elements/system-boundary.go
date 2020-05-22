@@ -14,7 +14,7 @@ func NewSystemBoundary(name string) *SystemBoundary {
 		C4BoundaryElement: C4BoundaryElement{
 			C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
 			elements:      []C4NodeElement{},
-			containers:    []C4BoundaryElement{},
+			boundaries:    []C4BoundaryElement{},
 		},
 	}
 	systemBoundary.C4Writer = func() string {
@@ -24,7 +24,7 @@ func NewSystemBoundary(name string) *SystemBoundary {
 }
 
 func (sb *SystemBoundary) AddSystemBoundary(systemBoundary C4BoundaryElement) *SystemBoundary {
-	sb.containers = append(sb.containers, systemBoundary)
+	sb.boundaries = append(sb.boundaries, systemBoundary)
 	return sb
 }
 
@@ -41,7 +41,7 @@ func (sb *SystemBoundary) toC4PlantUMLString() string {
 		b.WriteString(element.C4Writer())
 	}
 
-	for _, container := range sb.containers {
+	for _, container := range sb.boundaries {
 		b.WriteString(container.C4Writer())
 	}
 
