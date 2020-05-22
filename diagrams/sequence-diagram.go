@@ -13,7 +13,7 @@ type C4SequenceDiagram struct {
 	sequence []elements.Step
 }
 
-func NewSequenceDiagram(name string) *C4SequenceDiagram {
+func NewSequenceDiagram(name string, model elements.C4Model) *C4SequenceDiagram {
 	return &C4SequenceDiagram{
 		name: name,
 		elements: map[elements.C4Alias]elements.C4NodeElement{},
@@ -37,7 +37,7 @@ func (c *C4SequenceDiagram) ToC4PlantUMLString() string {
 
 	b.WriteString(fmt.Sprintf("@startuml %s\n", c.name))
 	b.WriteString("!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Dynamic.puml\n")
-	//b.WriteString("LAYOUT_TOP_DOWN()\n")
+	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
 	for _, element := range c.elements {

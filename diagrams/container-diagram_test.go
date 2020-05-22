@@ -33,15 +33,16 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		Add(*someOtherContainer).
 		Build()
 
-	boundaryWrappingSomeOtherBonudary :=  elements.
+	boundaryWrappingSomeOtherBonudary := elements.
 		NewSystemBoundary("wrapping another boundary").
 		AddSystemBoundary(*someOtherSystemBoundary).
 		Build()
 
-	containerDiagram := NewContainerDiagram("My Container Diagram").
-		AddSystemBoundary(*someSystemBoundary).
-		AddSystemBoundary(*boundaryWrappingSomeOtherBonudary)
+	myModel := elements.C4Model{
+		Boundaries: []elements.C4BoundaryElement{*someSystemBoundary, *boundaryWrappingSomeOtherBonudary},
+	}
 
+	containerDiagram := NewContainerDiagram("My Container Diagram", myModel)
 
 	fmt.Println(containerDiagram.ToC4PlantUMLString())
 }

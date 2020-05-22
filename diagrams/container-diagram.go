@@ -8,25 +8,15 @@ import (
 
 type C4ContainerDiagram struct {
 	elements.C4Printable
-	name       string
-	elements   []elements.C4NodeElement
-	containers []elements.C4BoundaryElement
+	name  string
+	model elements.C4Model
 }
 
-func NewContainerDiagram (name string) *C4ContainerDiagram {
-	return &C4ContainerDiagram {
-		name:        name,
+func NewContainerDiagram(name string, model elements.C4Model) *C4ContainerDiagram {
+	return &C4ContainerDiagram{
+		name:  name,
+		model: model,
 	}
-}
-
-func (c *C4ContainerDiagram) Add(element elements.C4NodeElement) *C4ContainerDiagram {
-	c.elements = append(c.elements, element)
-	return c
-}
-
-func (c *C4ContainerDiagram) AddSystemBoundary(container elements.C4BoundaryElement) *C4ContainerDiagram {
-	c.containers = append(c.containers, container)
-	return c
 }
 
 func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
@@ -37,22 +27,22 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	for _, element := range c.elements {
+	for _, element := range c.model.Elements {
 		b.WriteString(element.C4Writer())
 	}
 
-	for _, container := range c.containers {
+	for _, container := range c.model.Boundaries {
 		b.WriteString(container.C4Writer())
 	}
 
-	for _, element := range c.elements {
+	for _, element := range c.model.Elements {
 		for _, relation := range element.OutgoingRelations {
 			b.WriteString(relation.ToC4PlantUMLString())
 		}
 	}
 
-	for _, container := range c.containers {
-		container.VisitElements(func(element elements.C4NodeElement) (done bool) {
+	for _, boundary := range c.model.Boundaries {
+		boundary.VisitElements(func(element elements.C4NodeElement) (done bool) {
 			for _, relation := range element.OutgoingRelations {
 				b.WriteString(relation.ToC4PlantUMLString())
 			}
