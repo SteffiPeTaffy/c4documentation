@@ -1,42 +1,46 @@
 package main
 
 import (
-	"c4documentation/diagrams"
-	"c4documentation/elements"
+	"github.com/SteffiPeTaffy/c4documentation/elements"
+	"github.com/SteffiPeTaffy/c4documentation/diagrams"
 	"fmt"
 )
 
 func main() {
+	someSystemBoundary := elements.
+		NewSystemBoundary("boundary one").
+		Build()
+
 	someContainerDatabase := elements.
 		NewDatabase("my database").
 		Description("stores stuff").
 		Technology("Postgres").
+		BelongsTo(someSystemBoundary).
 		Build()
+
 	someContainer := elements.
 		NewContainer("my first container").
-		RelatesTo(*someContainerDatabase, "persists stuff", "REST/https")
+		RelatesTo(someContainerDatabase, "persists stuff", "REST/https").
+		BelongsTo(someSystemBoundary).
+		Build()
 
-	someSystemBoundary := elements.
-		NewSystemBoundary("boundary one").
-		Add(*someContainer).
-		Add(*someContainerDatabase).
+	someOtherSystemBoundary := elements.
+		NewSystemBoundary("boundary two").
 		Build()
 
 	someOtherContainer := elements.
 		NewContainer("my other service").
 		Description("does also stuff").
 		Technology("Go").
-		RelatesTo(*someContainer, "requests stuff", "REST/https")
-
-	someOtherSystemBoundary := elements.
-		NewSystemBoundary("boundary two").
-		Add(*someOtherContainer).
+		RelatesTo(someContainer, "requests stuff", "REST/https").
+		BelongsTo(someOtherSystemBoundary).
 		Build()
 
-	containerDiagram := diagrams.NewContainerDiagram("SWF Container Diagram").
-		AddSystemBoundary(*someSystemBoundary).
-		AddSystemBoundary(*someOtherSystemBoundary)
+	myModel := &elements.C4Model{
+		Elements: []*elements.C4Element{someContainer, someContainerDatabase, someOtherContainer},
+	}
 
 
-	fmt.Println(containerDiagram.ToC4PlantUMLString())
-}
+	containerDiagram := diagrams.NewContainerDiagram("My Container Diagram", myModel)
+
+	fmt.Println(containerDiagram.ToC4PlantUMLString())}
