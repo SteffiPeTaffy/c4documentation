@@ -5,14 +5,19 @@ import (
 )
 
 type Person struct {
-	C4NodeElement
+	C4Element
 	description string
 	external    bool
 }
 
 func NewPerson(name string) *Person {
 	person := Person{
-		C4NodeElement: C4NodeElement{Name: name, OutgoingRelations: []C4Relation{}},
+		C4Element:   C4Element{
+			C4BaseElement:   C4BaseElement{
+				Name:              name,
+				OutgoingRelations: []C4Relation{},
+			},
+		},
 	}
 	person.C4Writer = func() string {
 		return person.toC4PlantUMLString()

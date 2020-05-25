@@ -9,22 +9,20 @@ import (
 type C4SequenceDiagram struct {
 	elements.C4Printable
 	name     string
-	elements map[elements.C4Alias]elements.C4NodeElement
+	elements []elements.C4Element
 	sequence []elements.Step
-	model elements.C4Model
+	model    elements.C4Model
 }
 
 func NewSequenceDiagram(name string, model elements.C4Model) *C4SequenceDiagram {
 	return &C4SequenceDiagram{
-		name: name,
-		elements: map[elements.C4Alias]elements.C4NodeElement{},
-		sequence: []elements.Step{},
-		model: model,
+		name:     name,
+		model:    model,
 	}
 }
-func (c *C4SequenceDiagram) Next(from elements.C4NodeElement, to elements.C4NodeElement, label string, technology string) *C4SequenceDiagram {
-	c.elements[from.Alias()] = from
-	c.elements[to.Alias()] = to
+
+func (c *C4SequenceDiagram) Next(from elements.C4Element, to elements.C4Element, label string, technology string) *C4SequenceDiagram {
+	c.elements = append(c.elements, from, to)
 	c.sequence = append(c.sequence, elements.Step{
 		From:       from,
 		To:         to,
@@ -42,9 +40,12 @@ func (c *C4SequenceDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	for _, boundary := range c.model.Boundaries {
-		b.WriteString(boundary.C4Writer())
+	relevantElements := make([]elements.C4Element, 0, len(c.elements))
+	for  _, value := range c.elements {
+		relevantElements = append(relevantElements, value)
 	}
+
+	b.WriteString(drawBoundaryView(c.model.BuildBoundaryViewFrom(relevantElements)))
 
 	for _, step := range c.sequence {
 		if c.model.Contains(step.From) || c.model.Contains(step.To) {

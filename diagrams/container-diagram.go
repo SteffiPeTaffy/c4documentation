@@ -23,32 +23,13 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("@startuml %s\n", c.name))
-	b.WriteString("!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Dynamic.puml\n")
+	b.WriteString("!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Container.puml\n\n")
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	for _, element := range c.model.Elements {
-		b.WriteString(element.C4Writer())
-	}
+	b.WriteString(drawBoundaryView(c.model.BuildBoundaryViewFrom(c.model.Elements)))
 
-	for _, container := range c.model.Boundaries {
-		b.WriteString(container.C4Writer())
-	}
-
-	for _, element := range c.model.Elements {
-		for _, relation := range element.OutgoingRelations {
-			b.WriteString(relation.ToC4PlantUMLString())
-		}
-	}
-
-	for _, boundary := range c.model.Boundaries {
-		boundary.VisitElements(func(element elements.C4NodeElement) (done bool) {
-			for _, relation := range element.OutgoingRelations {
-				b.WriteString(relation.ToC4PlantUMLString())
-			}
-			return false
-		})
-	}
+	b.WriteString(drawRelations(c.model.Elements))
 
 	b.WriteString("@enduml")
 
