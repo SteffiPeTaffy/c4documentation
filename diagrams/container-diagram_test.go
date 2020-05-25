@@ -36,7 +36,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		BelongsTo(someOtherSystemBoundary).
 		Build()
 
-	myModel := elements.C4Model{
+	myModel := &elements.C4Model{
 		Elements: []*elements.C4Element{someContainer, someContainerDatabase, someOtherContainer},
 	}
 

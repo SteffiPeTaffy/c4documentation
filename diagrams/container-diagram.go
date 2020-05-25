@@ -7,12 +7,11 @@ import (
 )
 
 type C4ContainerDiagram struct {
-	elements.C4Printable
 	name  string
-	model elements.C4Model
+	model *elements.C4Model
 }
 
-func NewContainerDiagram(name string, model elements.C4Model) *C4ContainerDiagram {
+func NewContainerDiagram(name string, model *elements.C4Model) *C4ContainerDiagram {
 	return &C4ContainerDiagram{
 		name:  name,
 		model: model,
