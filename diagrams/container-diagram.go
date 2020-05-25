@@ -27,9 +27,16 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	b.WriteString(drawBoundaryView(c.model.BuildBoundaryViewFrom(c.model.Elements)))
+	all := func(element elements.C4Element) bool {
+		return true
+	}
+	b.WriteString(c.model.BuildBoundaryViewFrom(all).ToC4PlantUMLString())
 
-	b.WriteString(drawRelations(c.model.Elements))
+	for _, element := range c.model.Elements {
+		for _, relation := range element.OutgoingRelations {
+			b.WriteString(relation.ToC4PlantUMLString())
+		}
+	}
 
 	b.WriteString("@enduml")
 
