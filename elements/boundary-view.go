@@ -18,6 +18,7 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 		NestedBoundaries: []*BoundaryView{},
 	}
 
+	// add elements that live on top level (not inside a boundary) as children
 	withChilds := []*C4Element{}
 	for _, element := range elements {
 		if element.Parent == nil {
@@ -26,6 +27,7 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 		}
 		withChilds = append(withChilds, element)
 	}
+	// create list of all boundaries (and their children) that are referenced by one or more children
 	boundaries := make(map[C4Alias]*BoundaryView)
 	for _, element := range withChilds {
 		if boundaries[element.Parent.Alias()] != nil {
@@ -38,7 +40,7 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 			}
 		}
 	}
-
+	// add all boundaries that are wrapping other boundaries and add their sub boundaries
 	for _, boundary := range boundaries {
 		p := boundary.ElementInView.Parent
 		for p != nil {
@@ -54,6 +56,7 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 			p = p.Parent
 		}
 	}
+	// all boundaries that are not contained within other boundaries live on the root
 	for _, boundary := range boundaries {
 		if boundary.ElementInView.Parent == nil {
 			root.NestedBoundaries = append(root.NestedBoundaries, boundary)
