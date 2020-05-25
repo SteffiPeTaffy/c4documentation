@@ -2,13 +2,19 @@ package diagrams
 
 import (
 	"fmt"
-	"github.com/SteffiPeTaffy/c4documentation/elements"
 	"testing"
+
+	"github.com/SteffiPeTaffy/c4documentation/elements"
 )
 
 func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
+	someWrappingBoundary := elements.
+		NewSystemBoundary("Wrapping Boundary").
+		Build()
+
 	someSystemBoundary := elements.
 		NewSystemBoundary("boundary one").
+		BelongsTo(someWrappingBoundary).
 		Build()
 
 	someContainerDatabase := elements.
@@ -24,6 +30,12 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		BelongsTo(someSystemBoundary).
 		Build()
 
+	outerContainer := elements.
+		NewContainer("my outer container").
+		RelatesTo(someContainerDatabase, "persists stuff", "REST/https").
+		BelongsTo(someWrappingBoundary).
+		Build()
+
 	someOtherSystemBoundary := elements.
 		NewSystemBoundary("boundary two").
 		Build()
@@ -37,7 +49,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		Build()
 
 	myModel := &elements.C4Model{
-		Elements: []*elements.C4Element{someContainer, someContainerDatabase, someOtherContainer},
+		Elements: []*elements.C4Element{someContainer, someContainerDatabase, outerContainer, someOtherContainer},
 	}
 
 	containerDiagram := NewContainerDiagram("My Container Diagram", myModel)

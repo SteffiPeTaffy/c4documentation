@@ -6,35 +6,61 @@ import (
 )
 
 type BoundaryView struct {
-	Parent           *C4BoundaryElement
+	ElementInView    *C4BoundaryElement
 	Children         []*C4Element
 	NestedBoundaries []*BoundaryView
 }
 
 func NewBoundaryView(elements []*C4Element) *BoundaryView {
-	baseBoundary := &BoundaryView{
-		Parent:           NewSystemBoundary("SWF").Build(),
+	root := &BoundaryView{
+		ElementInView:    nil,
 		Children:         []*C4Element{},
 		NestedBoundaries: []*BoundaryView{},
 	}
+
+	withChilds := []*C4Element{}
 	for _, element := range elements {
 		if element.Parent == nil {
-			baseBoundary.Children = append(baseBoundary.Children, element)
+			root.Children = append(root.Children, element)
+			continue
+		}
+		withChilds = append(withChilds, element)
+	}
+	boundaries := make(map[C4Alias]*BoundaryView)
+	for _, element := range withChilds {
+		if boundaries[element.Parent.Alias()] != nil {
+			boundaries[element.Parent.Alias()].Children = append(boundaries[element.Parent.Alias()].Children, element)
 		} else {
-			parentBoundary, hasParentBoundary := baseBoundary.FindParent(element)
-			if !hasParentBoundary {
-				baseBoundary.NestedBoundaries = append(baseBoundary.NestedBoundaries, &BoundaryView{
-					Parent:           element.Parent,
-					Children:         []*C4Element{element},
-					NestedBoundaries: []*BoundaryView{},
-				})
-			} else {
-				parentBoundary.Children = append(parentBoundary.Children, element)
+			boundaries[element.Parent.Alias()] = &BoundaryView{
+				ElementInView:    element.Parent,
+				Children:         []*C4Element{element},
+				NestedBoundaries: []*BoundaryView{},
 			}
 		}
 	}
 
-	return baseBoundary
+	for _, boundary := range boundaries {
+		p := boundary.ElementInView.Parent
+		for p != nil {
+			if boundaries[p.Alias()] != nil {
+				boundaries[p.Alias()].NestedBoundaries = append(boundaries[p.Alias()].NestedBoundaries, boundary)
+			} else {
+				boundaries[p.Alias()] = &BoundaryView{
+					ElementInView:    p,
+					Children:         []*C4Element{},
+					NestedBoundaries: []*BoundaryView{boundary},
+				}
+			}
+			p = p.Parent
+		}
+	}
+	for _, boundary := range boundaries {
+		if boundary.ElementInView.Parent == nil {
+			root.NestedBoundaries = append(root.NestedBoundaries, boundary)
+		}
+	}
+
+	return root
 }
 
 func (b *BoundaryView) VisitBoundaries(callback func(parent *BoundaryView) (done bool)) {
@@ -53,7 +79,7 @@ func (b *BoundaryView) FindParent(child *C4Element) (foundParent *BoundaryView, 
 	}
 
 	b.VisitBoundaries(func(elem *BoundaryView) (done bool) {
-		if elem.Parent.Alias() == child.Parent.Alias() {
+		if elem.ElementInView.Alias() == child.Parent.Alias() {
 			found = true
 			foundParent = elem
 			return true
@@ -66,17 +92,24 @@ func (b *BoundaryView) FindParent(child *C4Element) (foundParent *BoundaryView, 
 func (b *BoundaryView) ToC4PlantUMLString() string {
 	var buffer bytes.Buffer
 
+	if b.ElementInView != nil {
+		buffer.WriteString(fmt.Sprintf("System_Boundary(%s, %s) {\n", b.ElementInView.Alias(), b.ElementInView.Name))
+	}
 	for _, element := range b.Children {
 		buffer.WriteString(element.C4Writer())
 	}
 
 	for _, nestedBoundary := range b.NestedBoundaries {
-		buffer.WriteString(boundaryToC4PlantUMLString(nestedBoundary))
+		buffer.WriteString(nestedBoundary.ToC4PlantUMLString())
 	}
 
+	if b.ElementInView != nil {
+		buffer.WriteString("}\n")
+	}
 	return buffer.String()
 }
 
+/*
 func boundaryToC4PlantUMLString(boundary *BoundaryView) string {
 	var buffer bytes.Buffer
 
@@ -93,4 +126,4 @@ func boundaryToC4PlantUMLString(boundary *BoundaryView) string {
 	buffer.WriteString("}\n")
 
 	return buffer.String()
-}
+}*/
