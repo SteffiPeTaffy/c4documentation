@@ -5,23 +5,21 @@ import (
 )
 
 type Container struct {
-	C4Element
+	*C4Element
 	description       string
 	technology        string
 }
 
 func NewContainer(name string) *Container {
 	container := Container{
-		C4Element:   C4Element{
-			C4BaseElement:   C4BaseElement{
+		C4Element:   &C4Element{
+			C4BaseElement:   &C4BaseElement{
 				Name:              name,
-				OutgoingRelations: []C4Relation{},
+				OutgoingRelations: []*C4Relation{},
 			},
 		},
 	}
-	container.C4Writer = func() string {
-		return container.toC4PlantUMLString()
-	}
+	container.C4Writer = container.toC4PlantUMLString
 	return &container
 }
 

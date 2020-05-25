@@ -3,8 +3,7 @@ package elements
 import "fmt"
 
 type C4Relation struct {
-	C4Printable
-	From       C4BaseElement
+	From       *C4BaseElement
 	To         C4PlantUMLAlias
 	Label      string
 	Technology string

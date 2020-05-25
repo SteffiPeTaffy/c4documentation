@@ -5,17 +5,17 @@ import (
 )
 
 type System struct {
-	C4Element
+	*C4Element
 	description string
 	external    bool
 }
 
 func NewSystem(name string) *System {
 	system := System{
-		C4Element:   C4Element{
-			C4BaseElement:   C4BaseElement{
+		C4Element:   &C4Element{
+			C4BaseElement:   &C4BaseElement{
 				Name:              name,
-				OutgoingRelations: []C4Relation{},
+				OutgoingRelations: []*C4Relation{},
 			},
 		},
 	}

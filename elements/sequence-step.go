@@ -3,9 +3,8 @@ package elements
 import "fmt"
 
 type Step struct {
-	C4Printable
-	From       C4Element
-	To         C4Element
+	From       *C4Element
+	To         *C4Element
 	Label      string
 	Technology string
 }

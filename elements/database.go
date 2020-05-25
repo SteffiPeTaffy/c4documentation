@@ -5,17 +5,17 @@ import (
 )
 
 type Database struct {
-	C4Element
+	*C4Element
 	description       string
 	technology        string
 }
 
 func NewDatabase(name string) *Database {
 	database := Database{
-		C4Element:   C4Element{
-			C4BaseElement:   C4BaseElement{
+		C4Element:   &C4Element{
+			C4BaseElement:   &C4BaseElement{
 				Name:              name,
-				OutgoingRelations: []C4Relation{},
+				OutgoingRelations: []*C4Relation{},
 			},
 		},
 	}

@@ -15,13 +15,13 @@ func TestC4SequenceDiagram_ToC4PlantUMLString(t *testing.T) {
 		NewDatabase("my database").
 		Description("stores stuff").
 		Technology("Postgres").
-		BelongsTo(*someSystemBoundary).
+		BelongsTo(someSystemBoundary).
 		Build()
 
 	someContainer := elements.
 		NewContainer("my first container").
 		RelatesTo(someContainerDatabase, "persists stuff", "REST/https").
-		BelongsTo(*someSystemBoundary).
+		BelongsTo(someSystemBoundary).
 		Build()
 
 	someOtherSystemBoundary := elements.
@@ -33,16 +33,16 @@ func TestC4SequenceDiagram_ToC4PlantUMLString(t *testing.T) {
 		Description("does also stuff").
 		Technology("Go").
 		RelatesTo(someContainer, "requests stuff", "REST/https").
-		BelongsTo(*someOtherSystemBoundary).
+		BelongsTo(someOtherSystemBoundary).
 		Build()
 
-	myModel := elements.C4Model{
-		Elements: []elements.C4Element{*someContainer, *someContainerDatabase, *someOtherContainer},
+	myModel := &elements.C4Model{
+		Elements: []*elements.C4Element{someContainer, someContainerDatabase, someOtherContainer},
 	}
 
 	sequenceDiagram := NewSequenceDiagram("My Sequence Diagram", myModel).
-		Next(*someContainer, *someOtherContainer, "Sends customer update events to", "async").
-		Next(*someOtherContainer, *someContainer, "Sends ack back", "async")
+		Next(someContainer, someOtherContainer, "Sends customer update events to", "async").
+		Next(someOtherContainer, someContainer, "Sends ack back", "async")
 
 	fmt.Println(sequenceDiagram.ToC4PlantUMLString())
 }

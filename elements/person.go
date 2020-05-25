@@ -5,17 +5,17 @@ import (
 )
 
 type Person struct {
-	C4Element
+	*C4Element
 	description string
 	external    bool
 }
 
 func NewPerson(name string) *Person {
 	person := Person{
-		C4Element:   C4Element{
-			C4BaseElement:   C4BaseElement{
+		C4Element:   &C4Element{
+			C4BaseElement:   &C4BaseElement{
 				Name:              name,
-				OutgoingRelations: []C4Relation{},
+				OutgoingRelations: []*C4Relation{},
 			},
 		},
 	}

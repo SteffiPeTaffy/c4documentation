@@ -15,13 +15,13 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		NewDatabase("my database").
 		Description("stores stuff").
 		Technology("Postgres").
-		BelongsTo(*someSystemBoundary).
+		BelongsTo(someSystemBoundary).
 		Build()
 
 	someContainer := elements.
 		NewContainer("my first container").
 		RelatesTo(someContainerDatabase, "persists stuff", "REST/https").
-		BelongsTo(*someSystemBoundary).
+		BelongsTo(someSystemBoundary).
 		Build()
 
 	someOtherSystemBoundary := elements.
@@ -33,11 +33,11 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 		Description("does also stuff").
 		Technology("Go").
 		RelatesTo(someContainer, "requests stuff", "REST/https").
-		BelongsTo(*someOtherSystemBoundary).
+		BelongsTo(someOtherSystemBoundary).
 		Build()
 
 	myModel := elements.C4Model{
-		Elements: []elements.C4Element{*someContainer, *someContainerDatabase, *someOtherContainer},
+		Elements: []*elements.C4Element{someContainer, someContainerDatabase, someOtherContainer},
 	}
 
 	containerDiagram := NewContainerDiagram("My Container Diagram", myModel)
