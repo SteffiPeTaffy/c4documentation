@@ -21,14 +21,14 @@ func NewSequenceDiagram(name string, model *elements.C4Model) *C4SequenceDiagram
 	}
 }
 
-func (c *C4SequenceDiagram) Next(from *elements.C4Element, to *elements.C4Element, label string, technology string) *C4SequenceDiagram {
+func (c *C4SequenceDiagram) Next(from *elements.C4Element, to *elements.C4Element, label string, dataObject string) *C4SequenceDiagram {
 	c.elements[from.Alias()] = from
 	c.elements[to.Alias()] = to
 	c.sequence = append(c.sequence, &elements.Step{
 		From:       from,
 		To:         to,
 		Label:      label,
-		DataObject: technology,
+		DataObject: dataObject,
 	})
 	return c
 }
