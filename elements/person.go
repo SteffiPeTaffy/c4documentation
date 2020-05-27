@@ -37,7 +37,7 @@ func (p *Person) External(external bool) *Person {
 
 func (p *Person) toC4PlantUMLString() string {
 	if p.external {
-		return fmt.Sprintf("Person_Ext(%v, '%s', '%s')", p.Alias(), p.Name, p.description)
+		return fmt.Sprintf("Person_Ext(%v, '%s', '%s')\n", p.Alias(), p.Name, p.description)
 	}
 	return fmt.Sprintf("Person(%v, '%s', '%s')\n", p.Alias(), p.Name, p.description)
 }
