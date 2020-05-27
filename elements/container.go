@@ -6,8 +6,8 @@ import (
 
 type Container struct {
 	*C4Element
-	description       string
-	technology        string
+	description string
+	owner       string
 }
 
 func NewContainer(name string) *Container {
@@ -28,11 +28,11 @@ func (c *Container) Description(description string) *Container {
 	return c
 }
 
-func (c *Container) Technology(technology string) *Container {
-	c.technology = technology
+func (c *Container) Owner(owner string) *Container {
+	c.owner = owner
 	return c
 }
 
 func (c *Container) toC4PlantUMLString() string {
-	return fmt.Sprintf("Container(%v, '%s', '%s', '%s')\n", c.Alias(), c.Name, c.technology, c.description)
+	return fmt.Sprintf("Container(%v, '%s', '%s', '%s')\n", c.Alias(), c.Name, c.owner, c.description)
 }

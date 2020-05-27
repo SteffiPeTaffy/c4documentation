@@ -20,7 +20,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 	someContainerDatabase := elements.
 		NewDatabase("my database").
 		Description("stores stuff").
-		Technology("Postgres").
+		Owner("Postgres").
 		BelongsTo(someSystemBoundary).
 		Build()
 
@@ -43,7 +43,7 @@ func TestContainerDiagram_ToPlantUMLString(t *testing.T) {
 	someOtherContainer := elements.
 		NewContainer("my other service").
 		Description("does also stuff").
-		Technology("Go").
+		Owner("Go").
 		RelatesTo(someContainer, "requests stuff", "REST/https").
 		BelongsTo(someOtherSystemBoundary).
 		Build()

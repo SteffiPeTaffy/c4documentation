@@ -14,7 +14,7 @@ func main() {
 	someContainerDatabase := elements.
 		NewDatabase("my database").
 		Description("stores stuff").
-		Technology("Postgres").
+		Owner("Postgres").
 		BelongsTo(someSystemBoundary).
 		Build()
 
@@ -31,7 +31,7 @@ func main() {
 	someOtherContainer := elements.
 		NewContainer("my other service").
 		Description("does also stuff").
-		Technology("Go").
+		Owner("Go").
 		RelatesTo(someContainer, "requests stuff", "REST/https").
 		BelongsTo(someOtherSystemBoundary).
 		Build()

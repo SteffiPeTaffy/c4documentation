@@ -6,8 +6,8 @@ import (
 
 type Database struct {
 	*C4Element
-	description       string
-	technology        string
+	description string
+	owner       string
 }
 
 func NewDatabase(name string) *Database {
@@ -30,11 +30,11 @@ func (d *Database) Description(description string) *Database {
 	return d
 }
 
-func (d *Database) Technology(technology string) *Database {
-	d.technology = technology
+func (d *Database) Owner(owner string) *Database {
+	d.owner = owner
 	return d
 }
 
 func (d *Database) toC4PlantUMLString() string {
-	return fmt.Sprintf("ContainerDb(%v, '%s', '%s', '%s')\n", d.Alias(), d.Name, d.technology, d.description)
+	return fmt.Sprintf("ContainerDb(%v, '%s', '%s', '%s')\n", d.Alias(), d.Name, d.owner, d.description)
 }
