@@ -6,7 +6,7 @@ import (
 )
 
 type BoundaryView struct {
-	ElementInView    *C4BoundaryElement
+	ElementInView    *SystemBoundary
 	Children         []*C4Element
 	NestedBoundaries []*BoundaryView
 }
@@ -66,32 +66,6 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 	return root
 }
 
-func (b *BoundaryView) VisitBoundaries(callback func(parent *BoundaryView) (done bool)) {
-	if done := callback(b); done {
-		return
-	}
-
-	for _, nestedBoundary := range b.NestedBoundaries {
-		nestedBoundary.VisitBoundaries(callback)
-	}
-}
-
-func (b *BoundaryView) FindParent(child *C4Element) (foundParent *BoundaryView, found bool) {
-	if child.Parent == nil {
-		return nil, false
-	}
-
-	b.VisitBoundaries(func(elem *BoundaryView) (done bool) {
-		if elem.ElementInView.Alias() == child.Parent.Alias() {
-			found = true
-			foundParent = elem
-			return true
-		}
-		return false
-	})
-	return
-}
-
 func (b *BoundaryView) ToC4PlantUMLString() string {
 	var buffer bytes.Buffer
 
@@ -104,29 +78,14 @@ func (b *BoundaryView) ToC4PlantUMLString() string {
 
 	for _, nestedBoundary := range b.NestedBoundaries {
 		buffer.WriteString(nestedBoundary.ToC4PlantUMLString())
+		for _, layoutRelation := range nestedBoundary.ElementInView.LayoutRelations {
+			buffer.WriteString(fmt.Sprintf("%s --[hidden]-- %s\n", layoutRelation.from.Alias(), layoutRelation.to.Alias()))
+		}
 	}
 
 	if b.ElementInView != nil {
 		buffer.WriteString("}\n")
 	}
+
 	return buffer.String()
 }
-
-/*
-func boundaryToC4PlantUMLString(boundary *BoundaryView) string {
-	var buffer bytes.Buffer
-
-	buffer.WriteString(fmt.Sprintf("System_Boundary(%s, %s) {\n", boundary.Parent.Alias(), boundary.Parent.Name))
-
-	for _, element := range boundary.Children {
-		buffer.WriteString(element.C4Writer())
-	}
-
-	for _, nestedBoundary := range boundary.NestedBoundaries {
-		buffer.WriteString(nestedBoundary.ToC4PlantUMLString())
-	}
-
-	buffer.WriteString("}\n")
-
-	return buffer.String()
-}*/

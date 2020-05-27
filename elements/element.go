@@ -40,11 +40,11 @@ func (n *C4BaseElement) Build() *C4BaseElement {
 
 type C4Element struct {
 	*C4BaseElement
-	Parent   *C4BoundaryElement
+	Parent   *SystemBoundary
 	C4Writer func() string
 }
 
-func (n *C4Element) BelongsTo(parent *C4BoundaryElement) *C4Element {
+func (n *C4Element) BelongsTo(parent *SystemBoundary) *C4Element {
 	n.Parent = parent
 	return n
 }
@@ -60,19 +60,5 @@ func (n *C4Element) RelatesTo(to C4PlantUMLAlias, label string, technology strin
 }
 
 func (n *C4Element) Build() *C4Element {
-	return n
-}
-
-type C4BoundaryElement struct {
-	*C4BaseElement
-	Parent *C4BoundaryElement
-}
-
-func (n *C4BoundaryElement) Build() *C4BoundaryElement {
-	return n
-}
-
-func (n *C4BoundaryElement) BelongsTo(parent *C4BoundaryElement) *C4BoundaryElement {
-	n.Parent = parent
 	return n
 }
