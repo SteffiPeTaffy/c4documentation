@@ -28,7 +28,7 @@ func (c *C4SequenceDiagram) Next(from *elements.C4Element, to *elements.C4Elemen
 		From:       from,
 		To:         to,
 		Label:      label,
-		Technology: technology,
+		DataObject: technology,
 	})
 	return c
 }
