@@ -37,7 +37,7 @@ func (c *C4SequenceDiagram) ToC4PlantUMLString() string {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("@startuml %s\n", c.name))
-	b.WriteString("!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Dynamic.puml\n")
+	b.WriteString("!include https://raw.githubusercontent.com/SteffiPeTaffy/c4documentation/master/templates/sequence.puml\n")
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
