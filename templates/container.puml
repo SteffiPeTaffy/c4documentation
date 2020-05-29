@@ -1,0 +1,84 @@
+!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Context.puml
+' uncomment the following line and comment the first to use locally
+' !include templates/container.puml
+
+' Scope: A single software system.
+' Primary elements: Containers within the software system in scope.
+' Supporting elements: People and software systems directly connected to the containers.
+' Intended audience: Technical people inside and outside of the software development team; including software architects, developers and operations/support staff.
+
+' Colors
+' ##################################
+
+!global $CONTAINER_BG_COLOR = "#438DD5"
+
+' Styling
+' ##################################
+
+skinparam rectangle<<container>> {
+    StereotypeFontColor $ELEMENT_FONT_COLOR
+    FontColor $ELEMENT_FONT_COLOR
+    BackgroundColor $CONTAINER_BG_COLOR
+    BorderColor #3C7FC0
+}
+
+skinparam database<<container>> {
+    StereotypeFontColor $ELEMENT_FONT_COLOR
+    FontColor $ELEMENT_FONT_COLOR
+    BackgroundColor $CONTAINER_BG_COLOR
+    BorderColor #3C7FC0
+}
+
+' Layout
+' ##################################
+
+!procedure LAYOUT_WITH_LEGEND()
+hide stereotype
+legend right
+|<color:$LEGEND_TITLE_COLOR>**Legend**</color> |
+|<$PERSON_BG_COLOR> person |
+|<$SYSTEM_BG_COLOR> system |
+|<$CONTAINER_BG_COLOR> container |
+|<$EXTERNAL_PERSON_BG_COLOR> external person |
+|<$EXTERNAL_SYSTEM_BG_COLOR> external system |
+endlegend
+!endprocedure
+
+' Elements
+' ##################################
+
+!function $getContainer($label, $techn, $descr, $details, $sprite)
+!if ($descr == "") && ($sprite == "") && ($details != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+''
+!endif
+!if ($descr == "") && ($sprite == "") && ($details == "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
+!endif
+!if ($descr == "") && ($sprite != "") && ($details == "")
+!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
+!endif
+!if ($descr != "") && ($sprite == "") && ($details != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n\n '+$descr
+!endif
+!if ($descr != "") && ($sprite == "") && ($details == "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'+$descr
+!endif
+!if ($descr != "") && ($sprite != "") && ($details == "")
+!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$descr ' \n\n
+!endif
+!endfunction
+
+!unquoted procedure Container($alias, $label, $techn, $descr="", $details="", $sprite="")
+rectangle "$getContainer($label, $techn, $descr, $details, $sprite)" <<container>> as $alias
+!endprocedure
+
+!unquoted procedure ContainerDb($alias, $label, $techn, $descr="", $details="", $sprite="")
+database "$getContainer($label, $techn, $descr, $details, $sprite)" <<container>> as $alias
+!endprocedure
+
+' Boundaries
+' ##################################
+
+!unquoted function Container_Boundary($alias, $label)
+!return Boundary($alias, $label, "Container")
+!endfunction

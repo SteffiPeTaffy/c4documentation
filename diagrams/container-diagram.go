@@ -22,7 +22,7 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	var b bytes.Buffer
 
 	b.WriteString(fmt.Sprintf("@startuml %s\n", c.name))
-	b.WriteString("!include https://raw.githubusercontent.com/adrianvlupu/C4-PlantUML/latest/C4_Container.puml\n\n")
+	b.WriteString("!include https://raw.githubusercontent.com/SteffiPeTaffy/c4documentation/master/templates/container.puml\n")
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
