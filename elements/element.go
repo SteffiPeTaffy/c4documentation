@@ -17,6 +17,7 @@ type C4PlantUMLAlias interface {
 type C4BaseElement struct {
 	Name string
 	OutgoingRelations []*C4Relation
+	Parent   *SystemBoundary
 }
 
 func (n *C4BaseElement) Alias() C4Alias {
@@ -24,13 +25,18 @@ func (n *C4BaseElement) Alias() C4Alias {
 	return C4Alias(reg.ReplaceAllString(n.Name, ""))
 }
 
-func (n *C4BaseElement) RelatesTo(to C4PlantUMLAlias, label string, technology string) *C4BaseElement {
+func (n *C4BaseElement) RelatesTo(to interface{}, label string, technology string) *C4BaseElement {
 	n.OutgoingRelations = append(n.OutgoingRelations, &C4Relation{
 		From:       n,
-		To:         to,
+		To:         to.(*C4BaseElement),
 		Label:      label,
 		Technology: technology,
 	})
+	return n
+}
+
+func (n *C4BaseElement) BelongsTo(parent *SystemBoundary) *C4BaseElement {
+	n.Parent = parent
 	return n
 }
 
@@ -40,7 +46,6 @@ func (n *C4BaseElement) Build() *C4BaseElement {
 
 type C4Element struct {
 	*C4BaseElement
-	Parent   *SystemBoundary
 	C4Writer func() string
 }
 
@@ -49,10 +54,22 @@ func (n *C4Element) BelongsTo(parent *SystemBoundary) *C4Element {
 	return n
 }
 
-func (n *C4Element) RelatesTo(to C4PlantUMLAlias, label string, technology string) *C4Element {
+func (n *C4Element) RelatesTo(to interface{}, label string, technology string) *C4Element {
+	var toElement *C4BaseElement
+
+	if val, ok := to.(*C4BaseElement); ok {
+		toElement = val
+	} else if val, ok := to.(*C4Element); ok{
+		toElement = val.C4BaseElement
+	} else if val, ok := to.(*SystemBoundary); ok {
+		toElement = val.C4BaseElement
+	} else {
+		return n
+	}
+
 	n.OutgoingRelations = append(n.OutgoingRelations, &C4Relation{
 		From:       n.C4BaseElement,
-		To:         to,
+		To:         toElement,
 		Label:      label,
 		Technology: technology,
 	})
@@ -62,3 +79,4 @@ func (n *C4Element) RelatesTo(to C4PlantUMLAlias, label string, technology strin
 func (n *C4Element) Build() *C4Element {
 	return n
 }
+

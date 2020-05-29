@@ -89,3 +89,4 @@ func (b *BoundaryView) ToC4PlantUMLString() string {
 
 	return buffer.String()
 }
+

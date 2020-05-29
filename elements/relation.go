@@ -4,7 +4,7 @@ import "fmt"
 
 type C4Relation struct {
 	From       *C4BaseElement
-	To         C4PlantUMLAlias
+	To         *C4BaseElement
 	Label      string
 	Technology string
 }

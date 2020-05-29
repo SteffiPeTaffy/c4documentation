@@ -6,14 +6,14 @@ import (
 
 type Container struct {
 	*C4Element
-	description string
-	owner       string
+	description      string
+	owner            string
 }
 
 func NewContainer(name string) *Container {
 	container := Container{
-		C4Element:   &C4Element{
-			C4BaseElement:   &C4BaseElement{
+		C4Element: &C4Element{
+			C4BaseElement: &C4BaseElement{
 				Name:              name,
 				OutgoingRelations: []*C4Relation{},
 			},

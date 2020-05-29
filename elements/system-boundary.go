@@ -7,7 +7,6 @@ type LayoutRelation struct {
 
 type SystemBoundary struct {
 	*C4BaseElement
-	Parent          *SystemBoundary
 	LayoutRelations []*LayoutRelation
 }
 
@@ -42,4 +41,12 @@ func (systemBoundary *SystemBoundary) Below(elementAbove *SystemBoundary) *Syste
 		to:   systemBoundary,
 	})
 	return systemBoundary
+}
+
+func (systemBoundary *SystemBoundary) GetRoot(element *C4Element) (found *C4BaseElement) {
+	if element.Parent == nil {
+		found = element.C4BaseElement
+	}
+
+	return systemBoundary.GetRoot(element)
 }
