@@ -46,52 +46,36 @@ endlegend
 
 ' Elements
 ' ##################################
-
-!function $getContainer($label, $techn, $descr, $details, $moredetails, $sprite)
-!if ($descr == "") && ($sprite == "") && ($details != "") && ($moredetails == "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+''
-!endif
-!if ($descr == "") && ($sprite == "") && ($details != "") && ($moredetails != "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n '+$moredetails+''
-!endif
-!if ($descr == "") && ($sprite == "") && ($details == "") && ($moredetails == "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
-!endif
-!if ($descr == "") && ($sprite == "") && ($details == "") && ($moredetails != "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+''
-!endif
-!if ($descr == "") && ($sprite != "") && ($details == "") && ($moredetails == "")
-!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
-!endif
-!if ($descr == "") && ($sprite != "") && ($details == "") && ($moredetails != "")
-!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+''
-!endif
-!if ($descr != "") && ($sprite == "") && ($details != "") && ($moredetails == "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n\n '+$descr
-!endif
-!if ($descr != "") && ($sprite == "") && ($details != "") && ($moredetails != "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n '+$moredetails+'\n\n '+$descr
-!endif
-!if ($descr != "") && ($sprite == "") && ($details == "") && ($moredetails == "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'+$descr
-!endif
-!if ($descr != "") && ($sprite == "") && ($details == "") && ($moredetails != "")
-!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+'\n\n '+$descr
-!endif
-!if ($descr != "") && ($sprite != "") && ($details == "") && ($moredetails == "")
-!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$descr ' \n\n
-!endif
-!if ($descr != "") && ($sprite != "") && ($details == "") && ($moredetails != "")
-!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+'\n\n '+$descr ' \n\n
-!endif
+!function $append($label, $value)
+!$label=$label + $value
+!return $label
 !endfunction
 
-!unquoted procedure Container($alias, $label, $techn, $descr="", $details="", $moredetails="", $sprite="")
-rectangle "$getContainer($label, $techn, $descr, $details, $moredetails, $sprite)" <<container>> as $alias
+!function $getContainer($label, $owner, $description, $details, $envURLs, $sprite)
+    !$containerString='=='+$label
+    !if ($owner != "")
+        !$containerString=$append($containerString, '\n//<size:'+$owner_FONT_SIZE+'>['+$owner+']</size>//\n\n')
+    !else
+        !$containerString=$append($containerString, '\n\n')
+    !endif
+    !if ($details != "")
+        !$containerString=$append($containerString, $details + '\n')
+    !endif
+    !if ($envURLs != "")
+        !$containerString=$append($containerString, $envURLs + '\n')
+    !endif
+    !if ($description != "")
+        !$containerString=$append($containerString, $description)
+    !endif
+    !return $containerString
+!endfunction
+
+!unquoted procedure Container($alias, $label, $owner="", $description="", $infoURLs="", $envURLs="", $sprite="")
+rectangle "$getContainer($label, $owner, $description, $details, $envURLs, $sprite)" <<container>> as $alias
 !endprocedure
 
-!unquoted procedure ContainerDb($alias, $label, $techn, $descr="", $details="", $moredetails="", $sprite="")
-database "$getContainer($label, $techn, $descr, $details, $moredetails, $sprite)" <<container>> as $alias
+!unquoted procedure ContainerDb($alias, $label, $owner="", $description="", $details="", $envURLs="", $sprite="")
+database "$getContainer($label, $owner, $description, $details, $envURLs, $sprite)" <<container>> as $alias
 !endprocedure
 
 ' Boundaries
