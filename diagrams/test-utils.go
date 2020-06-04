@@ -21,6 +21,9 @@ var someContainerDatabase = elements.
 var someContainer = elements.
 	NewContainer("my first container").
 	Repo("www.google.com").
+	DevEnvironment("dev.com").
+	NonProdEnvironment("non-prod.com").
+	ProdEnvironment("prod.com").
 	RelatesTo(someContainerDatabase.C4BaseElement, "persists stuff", "REST/https").
 	BelongsTo(someSystemBoundary).
 	Build()

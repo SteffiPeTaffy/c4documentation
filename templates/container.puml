@@ -47,33 +47,51 @@ endlegend
 ' Elements
 ' ##################################
 
-!function $getContainer($label, $techn, $descr, $details, $sprite)
-!if ($descr == "") && ($sprite == "") && ($details != "")
+!function $getContainer($label, $techn, $descr, $details, $moredetails, $sprite)
+!if ($descr == "") && ($sprite == "") && ($details != "") && ($moredetails == "")
 !return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+''
 !endif
-!if ($descr == "") && ($sprite == "") && ($details == "")
+!if ($descr == "") && ($sprite == "") && ($details != "") && ($moredetails != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n '+$moredetails+''
+!endif
+!if ($descr == "") && ($sprite == "") && ($details == "") && ($moredetails == "")
 !return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
 !endif
-!if ($descr == "") && ($sprite != "") && ($details == "")
+!if ($descr == "") && ($sprite == "") && ($details == "") && ($moredetails != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+''
+!endif
+!if ($descr == "") && ($sprite != "") && ($details == "") && ($moredetails == "")
 !return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'
 !endif
-!if ($descr != "") && ($sprite == "") && ($details != "")
+!if ($descr == "") && ($sprite != "") && ($details == "") && ($moredetails != "")
+!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+''
+!endif
+!if ($descr != "") && ($sprite == "") && ($details != "") && ($moredetails == "")
 !return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n\n '+$descr
 !endif
-!if ($descr != "") && ($sprite == "") && ($details == "")
+!if ($descr != "") && ($sprite == "") && ($details != "") && ($moredetails != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$details+'\n '+$moredetails+'\n\n '+$descr
+!endif
+!if ($descr != "") && ($sprite == "") && ($details == "") && ($moredetails == "")
 !return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n'+$descr
 !endif
-!if ($descr != "") && ($sprite != "") && ($details == "")
+!if ($descr != "") && ($sprite == "") && ($details == "") && ($moredetails != "")
+!return '=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+'\n\n '+$descr
+!endif
+!if ($descr != "") && ($sprite != "") && ($details == "") && ($moredetails == "")
 !return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$descr ' \n\n
+!endif
+!if ($descr != "") && ($sprite != "") && ($details == "") && ($moredetails != "")
+!return '<$'+$sprite+'>\n=='+$label+'\n//<size:'+$TECHN_FONT_SIZE+'>['+$techn+']</size>//\n\n '+$moredetails+'\n\n '+$descr ' \n\n
 !endif
 !endfunction
 
-!unquoted procedure Container($alias, $label, $techn, $descr="", $details="", $sprite="")
-rectangle "$getContainer($label, $techn, $descr, $details, $sprite)" <<container>> as $alias
+!unquoted procedure Container($alias, $label, $techn, $descr="", $details="", $moredetails="", $sprite="")
+rectangle "$getContainer($label, $techn, $descr, $details, $moredetails, $sprite)" <<container>> as $alias
 !endprocedure
 
-!unquoted procedure ContainerDb($alias, $label, $techn, $descr="", $details="", $sprite="")
-database "$getContainer($label, $techn, $descr, $details, $sprite)" <<container>> as $alias
+!unquoted procedure ContainerDb($alias, $label, $techn, $descr="", $details="", $moredetails="", $sprite="")
+database "$getContainer($label, $techn, $descr, $details, $moredetails, $sprite)" <<container>> as $alias
 !endprocedure
 
 ' Boundaries
