@@ -54,18 +54,19 @@ endlegend
 !function $getContainer($label, $owner, $description, $infoURLs, $envURLs, $sprite)
     !$containerString='=='+$label
     !if ($owner != "")
-        !$containerString=$append($containerString, '\n//<size:'+$TECHN_FONT_SIZE+'>['+$owner+']</size>//\n\n')
-    !else
+        !$containerString=$append($containerString, '\n//<size:'+$TECHN_FONT_SIZE+'>['+$owner+']</size>//')
+    !endif
+    !if ($infoURLs != "") || ($envURLs != "")
         !$containerString=$append($containerString, '\n\n')
     !endif
     !if ($infoURLs != "")
-        !$containerString=$append($containerString, $infoURLs + '\n')
+        !$containerString=$append($containerString, $infoURLs)
     !endif
     !if ($envURLs != "")
-        !$containerString=$append($containerString, $envURLs + '\n')
+        !$containerString=$append($containerString, '\n' + $envURLs)
     !endif
     !if ($description != "")
-        !$containerString=$append($containerString, $description)
+        !$containerString=$append($containerString,  '\n\n' + $description)
     !endif
     !return $containerString
 !endfunction
