@@ -79,6 +79,10 @@ rectangle "$getContainer($label, $owner, $description, $infoURLs, $envURLs, $spr
 database "$getContainer($label, $owner, $description, $infoURLs, $envURLs, $sprite)" <<container>> as $alias
 !endprocedure
 
+!unquoted procedure ContainerQ($alias, $label, $owner="", $description="", $infoURLs="", $envURLs="", $sprite="")
+queue "$getContainer($label, $owner, $description, $infoURLs, $envURLs, $sprite)" <<container>> as $alias
+!endprocedure
+
 ' Boundaries
 ' ##################################
 
