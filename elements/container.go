@@ -5,21 +5,10 @@ import (
 	"strings"
 )
 
-type Target string
-
-const (
-	Cloud            Target = "cloud"
-	DeviceCluster    Target = "device"
-	TestBench        Target = "cloud"
-	DeveloperMachine Target = "monitor"
-	Other            Target = "other"
-)
-
 type Container struct {
 	*C4Element
 	description      string
 	owner            string
-	deploymentTarget Target
 	swaggerUrl       string
 	pactUrl          string
 	repoUrl          string
@@ -49,11 +38,6 @@ func (c *Container) Description(description string) *Container {
 
 func (c *Container) Owner(owner string) *Container {
 	c.owner = owner
-	return c
-}
-
-func (c *Container) Target(deploymentTarget Target) *Container {
-	c.deploymentTarget = deploymentTarget
 	return c
 }
 
