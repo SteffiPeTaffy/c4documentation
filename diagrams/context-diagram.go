@@ -27,13 +27,13 @@ func (c *C4ContextDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	all := func(element *elements.C4Element) bool {
+	all := func(element elements.WritableElement) bool {
 		return true
 	}
 	boundaryView := c.model.CreateBoundaryView(all)
 
 	for _, child := range boundaryView.Children {
-		b.WriteString(child.C4Writer())
+		b.WriteString(child.WritePUML())
 	}
 
 	for _, topLevelBoundary := range boundaryView.NestedBoundaries {
@@ -50,10 +50,10 @@ func (c *C4ContextDiagram) ToC4PlantUMLString() string {
 	return b.String()
 }
 
-func findSystemRelations(elems []*elements.C4Element) []*elements.C4Relation {
+func findSystemRelations(elems []elements.WritableElement) []*elements.C4Relation {
 	relationsMap := make(map[elements.C4Alias][]*elements.C4Relation)
 	for _, element := range elems {
-		for _, relation := range element.OutgoingRelations {
+		for _, relation := range element.GetBase().OutgoingRelations {
 			systemRelation := &elements.C4Relation {
 				From:       findRoot(relation.From),
 				To:         findRoot(relation.To),

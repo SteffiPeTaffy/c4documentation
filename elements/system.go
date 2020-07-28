@@ -35,6 +35,16 @@ func (s *System) External(external bool) *System {
 	return s
 }
 
+func (s *System) BelongsTo(parent *SystemBoundary) *System {
+	s.C4Element.BelongsTo(parent)
+	return s
+}
+
+func (s *System) RelatesTo(to ElementWithBase, label string, technology string) *System {
+	s.C4Element.RelatesTo(to,label,technology)
+	return s
+}
+
 
 func (s *System) toC4PlantUMLString() string {
 	if s.external {

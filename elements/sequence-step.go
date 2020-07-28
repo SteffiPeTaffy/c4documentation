@@ -3,8 +3,8 @@ package elements
 import "fmt"
 
 type Step struct {
-	From       *C4Element
-	To         *C4Element
+	From       C4PlantUMLAlias
+	To         C4PlantUMLAlias
 	Label      string
 	DataObject string
 }

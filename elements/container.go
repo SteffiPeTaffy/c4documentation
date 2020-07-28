@@ -76,6 +76,16 @@ func (c *Container) ProdEnvironment(url string) *Container {
 	return c
 }
 
+func (c *Container) BelongsTo(parent *SystemBoundary) *Container {
+	c.C4Element.BelongsTo(parent)
+	return  c
+}
+
+func (c *Container) RelatesTo(to ElementWithBase, label string, technology string) *Container {
+	c.C4Element.RelatesTo(to,label,technology)
+	return c
+}
+
 func (c *Container) toC4PlantUMLString() string {
 	repoUrl := toPlantUMLLinkString(c.repoUrl, "repo")
 	pipelineUrl := toPlantUMLLinkString(c.pipelineUrl, "pipeline")
