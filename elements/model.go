@@ -4,13 +4,13 @@ type C4Model struct {
 	Elements []*C4Element
 }
 
-func (m *C4Model) Contains(element *C4Element) (found bool) {
+func (m *C4Model) Contains(element C4PlantUMLAlias) bool {
 	for _, elem := range m.Elements {
 		if elem.Alias() == element.Alias() {
-			found = true
+			return true
 		}
 	}
-	return found
+	return false
 }
 
 func (m *C4Model) CreateBoundaryView(filter func(element *C4Element) bool) *BoundaryView {

@@ -32,9 +32,11 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	b.WriteString(c.model.CreateBoundaryView(all).ToC4PlantUMLString())
 
 	//print relations
-	//todo check both ends are in model
 	for _, element := range c.model.Elements {
 		for _, relation := range element.OutgoingRelations {
+			if !c.model.Contains(relation.From) || !c.model.Contains(relation.To) {
+				continue
+			}
 			b.WriteString(relation.ToC4PlantUMLString())
 		}
 	}
