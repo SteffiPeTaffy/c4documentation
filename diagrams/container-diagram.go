@@ -26,14 +26,14 @@ func (c *C4ContainerDiagram) ToC4PlantUMLString() string {
 	b.WriteString("LAYOUT_TOP_DOWN()\n")
 	b.WriteString("LAYOUT_WITH_LEGEND()\n")
 
-	all := func(element *elements.C4Element) bool {
+	all := func(element elements.WritableElement) bool {
 		return true
 	}
 	b.WriteString(c.model.CreateBoundaryView(all).ToC4PlantUMLString())
 
 	//print relations
 	for _, element := range c.model.Elements {
-		for _, relation := range element.OutgoingRelations {
+		for _, relation := range element.GetBase().OutgoingRelations {
 			if !c.model.Contains(relation.From) || !c.model.Contains(relation.To) {
 				continue
 			}

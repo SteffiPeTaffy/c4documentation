@@ -25,16 +25,26 @@ func NewMessageQueue(name string) *MessageQueue {
 	return &database
 }
 
-func (d *MessageQueue) Description(description string) *MessageQueue {
-	d.description = description
-	return d
+func (q *MessageQueue) Description(description string) *MessageQueue {
+	q.description = description
+	return q
 }
 
-func (d *MessageQueue) Owner(owner string) *MessageQueue {
-	d.owner = owner
-	return d
+func (q *MessageQueue) Owner(owner string) *MessageQueue {
+	q.owner = owner
+	return q
 }
 
-func (d *MessageQueue) toC4PlantUMLString() string {
-	return fmt.Sprintf("ContainerQ(%v, '%s', '%s', '%s')\n", d.Alias(), d.Name, d.owner, d.description)
+func (q *MessageQueue) BelongsTo(parent *SystemBoundary) *MessageQueue {
+	q.C4Element.BelongsTo(parent)
+	return q
+}
+
+func (q *MessageQueue) RelatesTo(to ElementWithBase, label string, technology string) *MessageQueue {
+	q.C4Element.RelatesTo(to,label,technology)
+	return q
+}
+
+func (q *MessageQueue) toC4PlantUMLString() string {
+	return fmt.Sprintf("ContainerQ(%v, '%s', '%s', '%s')\n", q.Alias(), q.Name, q.owner, q.description)
 }

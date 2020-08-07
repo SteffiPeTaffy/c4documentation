@@ -35,6 +35,16 @@ func (p *Person) External(external bool) *Person {
 	return p
 }
 
+func (p *Person) BelongsTo(parent *SystemBoundary) *Person {
+	p.C4Element.BelongsTo(parent)
+	return p
+}
+
+func (p *Person) RelatesTo(to ElementWithBase, label string, technology string) *Person {
+	p.C4Element.RelatesTo(to,label,technology)
+	return p
+}
+
 func (p *Person) toC4PlantUMLString() string {
 	if p.external {
 		return fmt.Sprintf("Person_Ext(%v, '%s', '%s')\n", p.Alias(), p.Name, p.description)

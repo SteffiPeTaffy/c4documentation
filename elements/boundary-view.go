@@ -7,21 +7,21 @@ import (
 
 type BoundaryView struct {
 	ElementInView    *SystemBoundary
-	Children         []*C4Element
+	Children         []WritableElement
 	NestedBoundaries []*BoundaryView
 }
 
-func NewBoundaryView(elements []*C4Element) *BoundaryView {
+func NewBoundaryView(elements []WritableElement) *BoundaryView {
 	root := &BoundaryView{
 		ElementInView:    nil,
-		Children:         []*C4Element{},
+		Children:         []WritableElement{},
 		NestedBoundaries: []*BoundaryView{},
 	}
 
 	// add elements that live on top level (not inside a boundary) as children
-	withChilds := []*C4Element{}
+	withChilds := []WritableElement{}
 	for _, element := range elements {
-		if element.Parent == nil {
+		if element.GetBase().Parent == nil {
 			root.Children = append(root.Children, element)
 			continue
 		}
@@ -30,12 +30,12 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 	// create list of all boundaries (and their children) that are referenced by one or more children
 	boundaries := make(map[C4Alias]*BoundaryView)
 	for _, element := range withChilds {
-		if boundaries[element.Parent.Alias()] != nil {
-			boundaries[element.Parent.Alias()].Children = append(boundaries[element.Parent.Alias()].Children, element)
+		if boundaries[element.GetBase().Parent.Alias()] != nil {
+			boundaries[element.GetBase().Parent.Alias()].Children = append(boundaries[element.GetBase().Parent.Alias()].Children, element)
 		} else {
-			boundaries[element.Parent.Alias()] = &BoundaryView{
-				ElementInView:    element.Parent,
-				Children:         []*C4Element{element},
+			boundaries[element.GetBase().Parent.Alias()] = &BoundaryView{
+				ElementInView:    element.GetBase().Parent,
+				Children:         []WritableElement{element},
 				NestedBoundaries: []*BoundaryView{},
 			}
 		}
@@ -49,7 +49,7 @@ func NewBoundaryView(elements []*C4Element) *BoundaryView {
 			} else {
 				boundaries[p.Alias()] = &BoundaryView{
 					ElementInView:    p,
-					Children:         []*C4Element{},
+					Children:         []WritableElement{},
 					NestedBoundaries: []*BoundaryView{boundary},
 				}
 			}
@@ -73,7 +73,7 @@ func (b *BoundaryView) ToC4PlantUMLString() string {
 		buffer.WriteString(fmt.Sprintf("System_Boundary(%s, %s) {\n", b.ElementInView.Alias(), b.ElementInView.Name))
 	}
 	for _, element := range b.Children {
-		buffer.WriteString(element.C4Writer())
+		buffer.WriteString(element.WritePUML())
 	}
 
 	for _, nestedBoundary := range b.NestedBoundaries {
