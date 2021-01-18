@@ -26,7 +26,7 @@ skinparam rectangle<<container>> {
 skinparam rectangle<<deprecated_container>> {
     StereotypeFontColor $ELEMENT_FONT_COLOR
     FontColor $ELEMENT_FONT_COLOR
-    BackgroundColor $CONTAINER_BG_COLOR
+    BackgroundColor $DEPRECATED_CONTAINER_BG_COLOR
     BorderColor #3C7FC0
 }
 
