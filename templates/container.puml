@@ -11,11 +11,19 @@
 ' ##################################
 
 !global $CONTAINER_BG_COLOR = "#438DD5"
+!global $DEPRECATED_CONTAINER_BG_COLOR = "#B53737"
 
 ' Styling
 ' ##################################
 
 skinparam rectangle<<container>> {
+    StereotypeFontColor $ELEMENT_FONT_COLOR
+    FontColor $ELEMENT_FONT_COLOR
+    BackgroundColor $CONTAINER_BG_COLOR
+    BorderColor #3C7FC0
+}
+
+skinparam rectangle<<deprecated_container>> {
     StereotypeFontColor $ELEMENT_FONT_COLOR
     FontColor $ELEMENT_FONT_COLOR
     BackgroundColor $CONTAINER_BG_COLOR
@@ -73,6 +81,10 @@ endlegend
 
 !unquoted procedure Container($alias, $label, $owner="", $description="", $infoURLs="", $envURLs="", $sprite="")
 rectangle "$getContainer($label, $owner, $description, $infoURLs, $envURLs, $sprite)" <<container>> as $alias
+!endprocedure
+
+!unquoted procedure DeprecatedContainer($alias, $label, $owner="", $description="", $infoURLs="", $envURLs="", $sprite="")
+rectangle "$getContainer($label, $owner, $description, $infoURLs, $envURLs, $sprite)" <<deprecated_container>> as $alias
 !endprocedure
 
 !unquoted procedure ContainerDb($alias, $label, $owner="", $description="", $infoURLs="", $envURLs="", $sprite="")
